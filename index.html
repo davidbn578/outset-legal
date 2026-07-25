@@ -66,12 +66,31 @@
 
   /* ---- hero ---- */
   .hero{
-    display:grid; grid-template-columns:1.05fr .95fr; gap:64px; align-items:center;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    grid-template-areas:
+      "copy visual"
+      "cta  visual";
+    column-gap:64px; row-gap:0;
+    align-items:center;
     padding:clamp(56px,8vw,96px) var(--gut) clamp(64px,8vw,100px);
   }
+  .hero-copy{ grid-area:copy; }
+  .hero-cta{ grid-area:cta; align-self:start; }
+  .hero-visual{ grid-area:visual; align-self:center; }
   @media (max-width:900px){
-    .hero{ grid-template-columns:1fr; gap:48px; }
-    .hero-visual{ order:-1; }
+    .hero{
+      grid-template-columns:1fr;
+      grid-template-areas:
+        "copy"
+        "visual"
+        "cta";
+      row-gap:36px;
+      text-align:center;
+    }
+    .hero-visual{ justify-content:center; }
+    .lede{ margin-inline:auto; }
+    .launchlist-widget form{ justify-content:center; }
   }
   h1{
     font-family:'Archivo',sans-serif; font-weight:800;
@@ -83,8 +102,10 @@
     font-weight:500; font-size:clamp(17px,2.2vw,20px); line-height:1.6;
     color:var(--body); margin:28px 0 0; max-width:540px; text-wrap:pretty;
   }
-  .capture{ margin-top:40px; max-width:540px; }
+  .capture{ max-width:540px; }
+  .hero-cta .capture{ margin-top:36px; }
   .micro{ font-weight:500; font-size:13px; color:var(--muted); margin:14px 0 0; }
+  @media (max-width:900px){ .hero-cta .capture{ margin-top:0; margin-inline:auto; } }
 
   /* ---- LaunchList widget theming (defensive: styles the input+button it injects) ---- */
   .launchlist-widget{ width:100%; }
@@ -162,19 +183,22 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div>
+    <div class="hero-copy">
       <p class="eyebrow">Departure enforcement</p>
       <h1>Any app can tell you it's time to leave. Outset <span class="hl">does something about it.</span></h1>
       <p class="lede">Outset shields your distracting apps as your leave-by time closes in — and the only thing that opens them again is you, physically crossing your own doorstep.</p>
+    </div>
+
+    <div class="hero-visual">
+      <img src="/hero.png" alt="Outset armed home screen — 9 minutes until leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
+    </div>
+
+    <div class="hero-cta">
       <div class="capture">
         <!-- LaunchList form renders here -->
         <div class="launchlist-widget" data-key-id="dvJbbf"></div>
         <p class="micro">One email when it ships. No account required.</p>
       </div>
-    </div>
-
-    <div class="hero-visual">
-      <img src="/hero.png" alt="Outset armed home screen — 9 minutes until leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
     </div>
   </section>
 
