@@ -53,11 +53,11 @@
   :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
   .eyebrow{
     font-family:'Spline Sans Mono',monospace; font-weight:700;
-    font-size:13px; letter-spacing:1px; color:var(--muted); margin:0;
-    display:inline-flex; align-items:center; gap:10px;
+    font-size:15px; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent); margin:0;
+    display:inline-flex; align-items:center; gap:12px;
   }
   .eyebrow::before{
-    content:""; width:22px; height:2px; background:var(--accent); border-radius:2px; flex:0 0 auto;
+    content:""; width:28px; height:3px; background:var(--accent); border-radius:2px; flex:0 0 auto;
   }
   /* centered sections: center the eyebrow row */
   .privacy .eyebrow{ justify-content:center; }
@@ -112,6 +112,12 @@
   .capture{ max-width:540px; }
   .hero-cta .capture{ margin-top:36px; }
   .micro{ font-weight:500; font-size:13px; color:var(--muted); margin:14px 0 0; }
+  /* keep the hero signup left-aligned with the headline/lede on desktop, even if the
+     LaunchList widget injects its own centering */
+  @media (min-width:901px){
+    .hero-cta, .hero-cta .capture, .hero-cta .launchlist-widget{ margin-left:0; margin-right:auto; text-align:left; }
+    .hero-cta .launchlist-widget form{ justify-content:flex-start; }
+  }
   @media (max-width:900px){ .hero-cta .capture{ margin-top:0; margin-inline:auto; } }
 
   /* ---- LaunchList widget theming (defensive: styles the input+button it injects) ---- */
@@ -172,7 +178,7 @@
   .fl.flipping{ animation:flapflip .12s linear; }
 
   /* ---- how it works ---- */
-  .section{ padding:0 var(--gut) clamp(72px,9vw,100px); }
+  .section{ padding:clamp(72px,9vw,100px) var(--gut); }
   .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(28px,4vw,56px); margin-top:40px; }
   @media (max-width:760px){ .steps{ grid-template-columns:1fr; gap:36px; } }
   .step{ border-top:1px solid rgba(255,255,255,.1); padding-top:24px; }
@@ -197,7 +203,7 @@
   .recognize .closer b{ color:var(--accent); font-weight:700; }
 
   /* ---- feature detail ---- */
-  .features{ padding:0 var(--gut) clamp(72px,9vw,100px); }
+  .features{ padding:clamp(72px,9vw,100px) var(--gut); }
   .feat-head{ font-family:'Archivo',sans-serif; font-weight:800; font-size:clamp(32px,5vw,50px); letter-spacing:-1.2px; line-height:1.02; margin:16px 0 0; text-wrap:balance; }
   .section .feat-head, .features .feat-head{ margin-bottom:8px; }
   .feat-grid{ display:grid; gap:clamp(16px,2.5vw,28px); margin-top:40px; }
@@ -233,13 +239,29 @@
   .pp h3{ font-family:'Archivo',sans-serif; font-weight:800; font-size:17px; margin:0 0 8px; color:var(--text); }
   .pp p{ font-weight:500; font-size:14.5px; line-height:1.55; color:var(--body); margin:0; }
 
-  /* ---- faq ---- */
+  /* ---- faq (accordion) ---- */
   .faq{ padding:clamp(72px,9vw,100px) var(--gut); }
   .faq-list{ margin-top:40px; max-width:820px; }
-  .qa{ border-top:1px solid rgba(255,255,255,.1); padding:24px 0; }
+  .qa{ border-top:1px solid rgba(255,255,255,.1); }
   .qa:last-child{ border-bottom:1px solid rgba(255,255,255,.1); }
-  .qa h3{ font-family:'Archivo',sans-serif; font-weight:700; font-size:18px; color:var(--text); margin:0 0 8px; letter-spacing:-.2px; }
-  .qa p{ font-weight:500; font-size:16px; line-height:1.6; color:var(--body); margin:0; text-wrap:pretty; }
+  .qa summary{
+    list-style:none; cursor:pointer; padding:22px 0;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    font-family:'Archivo',sans-serif; font-weight:700; font-size:18px; color:var(--text); letter-spacing:-.2px;
+    transition:color .15s ease;
+  }
+  .qa summary::-webkit-details-marker{ display:none; }
+  .qa summary:hover{ color:var(--accent); }
+  .qa summary::after{
+    content:""; flex:0 0 auto; width:12px; height:12px;
+    border-right:2px solid var(--muted); border-bottom:2px solid var(--muted);
+    transform:rotate(45deg); transition:transform .2s ease, border-color .15s ease;
+    margin-right:2px;
+  }
+  .qa[open] summary::after{ transform:rotate(-135deg); border-color:var(--accent); }
+  .qa[open] summary{ color:var(--accent); }
+  .qa p{ font-weight:500; font-size:16px; line-height:1.6; color:var(--body); margin:0 0 22px; text-wrap:pretty; max-width:720px; }
+  @media (prefers-reduced-motion: reduce){ .qa summary::after{ transition:none; } }
 
   /* ---- privacy (old single-line, kept for compatibility) ---- */
   .privacy{ padding:clamp(80px,10vw,104px) var(--gut); text-align:center; }
@@ -300,7 +322,6 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-copy">
-      <p class="eyebrow">Departure enforcement</p>
       <h1><span class="h1-a">Any app can tell you it's time to leave.</span> <span class="hl">Outset does something about it.</span></h1>
       <p class="lede">Outset shields your distracting apps as your leave-by time closes in — and the only thing that opens them again is you, physically crossing your own doorstep.</p>
     </div>
@@ -431,30 +452,30 @@
     <p class="eyebrow">Questions</p>
     <h2>The things people ask first.</h2>
     <div class="faq-list">
-      <div class="qa">
-        <h3>What if there's an emergency?</h3>
+      <details class="qa">
+        <summary>What if there's an emergency?</summary>
         <p>Outset only shields the distracting apps you pick. Phone calls, messages, maps, and everything else on your phone keep working normally.</p>
-      </div>
-      <div class="qa">
-        <h3>Will it drain my battery?</h3>
+      </details>
+      <details class="qa">
+        <summary>Will it drain my battery?</summary>
         <p>Departure detection is built on Apple's native geofencing — the same power-efficient location tech iOS already runs in the background — rather than keeping GPS on the whole time.</p>
-      </div>
-      <div class="qa">
-        <h3>Which apps can it block?</h3>
+      </details>
+      <details class="qa">
+        <summary>Which apps can it block?</summary>
         <p>Any apps you choose, through Apple's own Screen Time picker. Instagram, X, games, whatever eats your mornings — you decide the list.</p>
-      </div>
-      <div class="qa">
-        <h3>Does it need signal to work?</h3>
+      </details>
+      <details class="qa">
+        <summary>Does it need signal to work?</summary>
         <p>Detecting that you've left home works offline. Live traffic — the part that adjusts your leave-by time — needs a connection to recalculate.</p>
-      </div>
-      <div class="qa">
-        <h3>Is it iPhone only?</h3>
+      </details>
+      <details class="qa">
+        <summary>Is it iPhone only?</summary>
         <p>For now, yes — iPhone on iOS 17 or later. The app relies on Apple's Screen Time and geofencing frameworks, which are iOS-specific.</p>
-      </div>
-      <div class="qa">
-        <h3>What will it cost?</h3>
+      </details>
+      <details class="qa">
+        <summary>What will it cost?</summary>
         <p>Outset will be free to start, with optional paid features for people who want more. No account required either way. Final pricing lands at launch.</p>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -472,7 +493,7 @@
   <footer>
     <div class="brand">Outset</div>
     <nav>
-      <a href="mailto:outset.support@gmail.com">Contact</a>
+      <a href="mailto:outset.support@gmail.com">outset.support@gmail.com</a>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
     </nav>
