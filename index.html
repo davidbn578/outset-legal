@@ -271,7 +271,7 @@
   }
 
   /* ---- closing ---- */
-  .closing{ padding:0 var(--gut) clamp(80px,10vw,104px); }
+  .closing{ padding:clamp(72px,9vw,100px) var(--gut) clamp(80px,10vw,104px); }
   .closing-card{
     background:var(--recess); border:1px solid rgba(255,255,255,.06); border-radius:24px;
     padding:clamp(48px,7vw,76px) clamp(28px,6vw,80px);
@@ -350,8 +350,7 @@
   <!-- IS THIS YOU -->
   <section class="recognize">
     <p class="eyebrow">If you're always running late</p>
-    <h2>You've tried leaving earlier. It didn't work.</h2>
-    <div class="items">
+    <div class="items" style="margin-top:36px;">
       <div class="rec"><p>You leave what feels like plenty of time, and you're somehow still late.</p></div>
       <div class="rec"><p>You open one app to check one thing, and forty minutes are gone.</p></div>
       <div class="rec"><p>You set the alarms, then turn them off without moving an inch.</p></div>
