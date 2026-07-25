@@ -114,23 +114,55 @@
     flex:1 1 220px; min-width:0; height:58px; padding:0 20px;
     background:var(--surface); border:1px solid rgba(255,255,255,.14); border-radius:14px;
     font-family:'Spline Sans Mono',monospace; font-weight:500; font-size:16px; color:var(--text);
-    outline:none;
+    outline:none; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
   }
   .launchlist-widget input[type="email"]::placeholder{ color:#5f6672; }
+  .launchlist-widget input[type="email"]:focus{
+    border-color:var(--accent); background:#22252d;
+    box-shadow:0 0 0 3px rgba(255,212,0,.18);
+  }
   .launchlist-widget button{
     height:58px; padding:0 30px; background:var(--accent); border:none; border-radius:14px;
     box-shadow:0 10px 34px rgba(255,212,0,.18);
     font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:15px; letter-spacing:.3px;
-    color:var(--bg); cursor:pointer; white-space:nowrap; transition:background .12s ease;
+    color:var(--bg); cursor:pointer; white-space:nowrap;
+    transition:background .14s ease, transform .12s ease, box-shadow .14s ease;
   }
-  .launchlist-widget button:hover{ background:var(--accent-hover); }
+  .launchlist-widget button:hover{ background:var(--accent-hover); transform:translateY(-2px); box-shadow:0 16px 40px rgba(255,212,0,.28); }
+  .launchlist-widget button:active{ transform:translateY(0); box-shadow:0 8px 24px rgba(255,212,0,.20); }
 
-  /* ---- hero image (real app screen) ---- */
+  /* ---- hero image (real app screen) with live flap overlay ---- */
   .hero-visual{ display:flex; justify-content:center; }
+  .hero-phone-wrap{ position:relative; width:320px; max-width:84vw; }
   .hero-phone{
-    width:320px; max-width:84vw; height:auto; display:block;
+    width:100%; height:auto; display:block;
     filter:drop-shadow(0 40px 90px rgba(0,0,0,.55));
   }
+  /* overlay sits exactly over the erased 9:00 region (measured from the PNG) */
+  .flap-overlay{
+    position:absolute; left:21.04%; top:25.99%; width:57.93%; height:12.0%;
+    display:flex; align-items:center; justify-content:center; gap:2.2%;
+    pointer-events:none;
+  }
+  .fl{
+    font-family:'Spline Sans Mono',monospace; font-weight:700;
+    color:var(--bg); background:var(--accent);
+    border-radius:12%/9%;
+    width:26%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:clamp(26px,7.4vw,52px); line-height:1;
+    position:relative; overflow:hidden;
+  }
+  .fl::after{ content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(0,0,0,.28); }
+  .fl.colon{ background:transparent; color:var(--accent); width:auto; }
+  .fl.colon::after{ display:none; }
+  @keyframes flapflip{
+    0%   { transform:rotateX(0deg);   }
+    45%  { transform:rotateX(-90deg); }
+    55%  { transform:rotateX(90deg);  }
+    100% { transform:rotateX(0deg);   }
+  }
+  .fl.flipping{ animation:flapflip .12s linear; }
 
   /* ---- how it works ---- */
   .section{ padding:0 var(--gut) clamp(72px,9vw,100px); }
@@ -159,11 +191,12 @@
 
   /* ---- feature detail ---- */
   .features{ padding:0 var(--gut) clamp(72px,9vw,100px); }
-  .feat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(16px,2.5vw,28px); margin-top:40px; }
-  @media (max-width:680px){ .feat-grid{ grid-template-columns:1fr; } }
-  .feat{ background:var(--surface); border:1px solid var(--hair); border-radius:16px; padding:28px 26px; }
-  .feat .k{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:11px; letter-spacing:1px; color:var(--accent); text-transform:uppercase; }
-  .feat h3{ font-family:'Archivo',sans-serif; font-weight:800; font-size:20px; letter-spacing:-.3px; margin:12px 0 8px; color:var(--text); }
+  .feat-head{ font-family:'Archivo',sans-serif; font-weight:800; font-size:clamp(28px,4.4vw,44px); letter-spacing:-1px; line-height:1.05; margin:14px 0 0; }
+  .feat-grid{ display:grid; gap:clamp(16px,2.5vw,28px); margin-top:40px; }
+  .feat-grid-3{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:760px){ .feat-grid-3{ grid-template-columns:1fr; } }
+  .feat{ background:var(--surface); border:1px solid var(--hair); border-top:2px solid var(--accent); border-radius:14px; padding:28px 26px; }
+  .feat-name{ font-family:'Archivo',sans-serif; font-weight:800; font-size:22px; letter-spacing:-.4px; color:var(--text); margin:0 0 12px; }
   .feat p{ font-weight:500; font-size:15.5px; line-height:1.6; color:var(--body); margin:0; }
 
   /* ---- competitive contrast ---- */
@@ -221,6 +254,11 @@
   .closing-card p{ font-weight:500; font-size:18px; color:var(--body); margin:20px 0 36px; max-width:520px; }
   .closing-card .capture{ width:100%; max-width:560px; margin-top:0; }
 
+  /* ---- scroll reveal (disabled under reduced-motion) ---- */
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+
   /* ---- footer ---- */
   footer{
     display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
@@ -249,7 +287,15 @@
     </div>
 
     <div class="hero-visual">
-      <img src="/hero.png" alt="Outset armed home screen — 9 minutes until leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
+      <div class="hero-phone-wrap">
+        <img src="/hero-noeta.png" alt="Outset armed home screen — leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
+        <div class="flap-overlay" aria-hidden="true">
+          <span class="fl" data-final="9">9</span>
+          <span class="fl colon">:</span>
+          <span class="fl" data-final="0">0</span>
+          <span class="fl" data-final="0">0</span>
+        </div>
+      </div>
     </div>
 
     <div class="hero-cta">
@@ -279,46 +325,38 @@
     <div class="steps">
       <div class="step">
         <div class="n">01</div>
-        <h3>It reads your route</h3>
-        <p>Set where you're going. Outset uses Apple Maps traffic and works backward to the minute you need to walk out.</p>
+        <h3>Set your destination</h3>
+        <p>Tell Outset where you're headed. It checks Apple Maps traffic and works backward to the exact minute you need to walk out.</p>
       </div>
       <div class="step">
         <div class="n">02</div>
-        <h3>It shields your apps</h3>
-        <p>As leave-by approaches, the apps you chose go dark. No timer to wait out. No QR tag to walk to. No code to tap.</p>
+        <h3>Pick what to shield</h3>
+        <p>Choose the apps that swallow your mornings. As leave-by nears, Outset locks them — no timer, no code, no sticker to tap.</p>
       </div>
       <div class="step">
         <div class="n">03</div>
-        <h3>You leave. It opens.</h3>
-        <p>Crossing your geofence is the only unlock. Step past your doorstep and everything comes back on its own.</p>
+        <h3>Leave to unlock</h3>
+        <p>Walk out the door and everything comes back on. Actually leaving is the only thing that opens them.</p>
       </div>
     </div>
   </section>
 
   <!-- FEATURE DETAIL -->
   <section class="features">
-    <p class="eyebrow">What it does</p>
-    <h2 style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(28px,4.4vw,44px);letter-spacing:-1px;line-height:1.05;margin:14px 0 0;">More than a blocker on a timer.</h2>
-    <div class="feat-grid">
+    <p class="eyebrow">What Outset does</p>
+    <h2 class="feat-head">Three things a reminder can't.</h2>
+    <div class="feat-grid feat-grid-3">
       <div class="feat">
-        <div class="k">Live leave-by</div>
-        <h3>It watches the traffic for you</h3>
-        <p>Outset recalculates your leave-by time as conditions change. When the roads slow down, it moves your deadline earlier and shields your apps sooner — before you're already behind.</p>
+        <div class="feat-name">Geofence unlock</div>
+        <p>Your home boundary is the key. The apps you picked stay dark until you physically cross that line — then they switch back on by themselves.</p>
       </div>
       <div class="feat">
-        <div class="k">Geofence unlock</div>
-        <h3>Leaving is the only key</h3>
-        <p>No timer to outlast, no code to enter, no sticker to tap. The apps stay dark until you physically cross the edge of your home area. Then they come back on their own.</p>
+        <div class="feat-name">Traffic-aware leave-by</div>
+        <p>Outset tracks live traffic and pulls your leave-by time earlier the moment the roads slow down, so a bad commute doesn't make you late before you've noticed.</p>
       </div>
       <div class="feat">
-        <div class="k">On-time record</div>
-        <h3>It keeps score</h3>
-        <p>Every on-time departure builds your streak. It turns "leave on time" from a vague intention into a running record you can actually see — and don't want to break.</p>
-      </div>
-      <div class="feat">
-        <div class="k">Calendar-aware</div>
-        <h3>It knows where you're due</h3>
-        <p>Connect your calendar and Outset can pull your next event, set the destination, and arm itself — so the mornings you most need it don't depend on you remembering to set it up.</p>
+        <div class="feat-name">Calendar-aware</div>
+        <p>Connect your calendar and Outset reads your next event, sets the destination, and arms itself — no setup on the mornings you most need it.</p>
       </div>
     </div>
   </section>
@@ -420,5 +458,44 @@
   </footer>
 
 </div>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Hero flap: settle onto the final digits with a brief flip, once, on load. */
+  var flaps = Array.prototype.slice.call(document.querySelectorAll('.fl[data-final]'));
+  if(flaps.length){
+    if(reduce){
+      flaps.forEach(function(f){ f.textContent = f.getAttribute('data-final'); });
+    } else {
+      flaps.forEach(function(f,i){
+        var target = f.getAttribute('data-final');
+        var ticks = 0, total = 6 + i*3;
+        setTimeout(function(){
+          var timer = setInterval(function(){
+            ticks++;
+            f.classList.add('flipping');
+            setTimeout(function(){ f.classList.remove('flipping'); }, 110);
+            if(ticks >= total){ f.textContent = target; clearInterval(timer); return; }
+            f.textContent = String(Math.floor(Math.random()*10));
+          }, 120);
+        }, 260 + i*90);
+      });
+    }
+  }
+
+  /* Scroll reveals: tag sections, fade+rise as they enter view. */
+  if(!reduce && 'IntersectionObserver' in window){
+    var targets = document.querySelectorAll('.recognize, .section, .features, .contrast, .privacy, .faq, .closing-card');
+    targets.forEach(function(el){ el.classList.add('reveal'); });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
+    targets.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
 </body>
 </html>
