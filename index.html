@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outset — be on time by default</title>
+<meta name="description" content="Outset shields your distracting apps as your leave-by time closes in, and unlocks them when you physically leave home. Runs on your iPhone. Join the waitlist.">
+
+<!-- Social preview. Add an og-image.png (1200x630) to the repo before sharing the link widely. -->
+<meta property="og:title" content="Outset — be on time by default">
+<meta property="og:description" content="Any app can tell you it's time to leave. Outset does something about it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://useoutset.app">
+<meta property="og:image" content="https://useoutset.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- LaunchList widget -->
+<script src="https://getlaunchlist.com/js/widget.js" defer></script>
+
+<style>
+  :root{
+    --bg:#16181D;
+    --surface:#1E2128;
+    --recess:#0B0C0F;
+    --text:#FFFFFF;
+    --muted:#9DA3AF;
+    --body:#CCCFD5;
+    --accent:#FFD400;
+    --accent-hover:#FFDE33;
+    --red:#E63946;
+    --hair:rgba(255,255,255,.08);
+    --gut: clamp(22px, 6vw, 100px);
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1440px; margin-inline:auto; }
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+  .eyebrow{
+    font-family:'Spline Sans Mono',monospace; font-weight:700;
+    font-size:13px; letter-spacing:1px; color:var(--muted); margin:0;
+  }
+
+  /* ---- top bar ---- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px var(--gut); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .brand{ font-family:'Archivo',sans-serif; font-weight:800; font-size:24px; letter-spacing:-.5px; }
+  .topbar .tag{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:11px; letter-spacing:1px; color:var(--muted); }
+
+  /* ---- hero ---- */
+  .hero{
+    display:grid; grid-template-columns:1.05fr .95fr; gap:64px; align-items:center;
+    padding:clamp(56px,8vw,96px) var(--gut) clamp(64px,8vw,100px);
+  }
+  @media (max-width:900px){
+    .hero{ grid-template-columns:1fr; gap:48px; }
+    .hero-visual{ order:-1; }
+  }
+  h1{
+    font-family:'Archivo',sans-serif; font-weight:800;
+    font-size:clamp(38px,6.4vw,62px); line-height:1.05; letter-spacing:-1.5px;
+    margin:22px 0 0; text-wrap:balance;
+  }
+  h1 .hl{ color:var(--accent); }
+  .lede{
+    font-weight:500; font-size:clamp(17px,2.2vw,20px); line-height:1.6;
+    color:var(--body); margin:28px 0 0; max-width:540px; text-wrap:pretty;
+  }
+  .capture{ margin-top:40px; max-width:540px; }
+  .micro{ font-weight:500; font-size:13px; color:var(--muted); margin:14px 0 0; }
+
+  /* ---- LaunchList widget theming (defensive: styles the input+button it injects) ---- */
+  .launchlist-widget{ width:100%; }
+  .launchlist-widget form{ display:flex; gap:10px; flex-wrap:wrap; }
+  .launchlist-widget input[type="email"]{
+    flex:1 1 220px; min-width:0; height:58px; padding:0 20px;
+    background:var(--surface); border:1px solid rgba(255,255,255,.14); border-radius:14px;
+    font-family:'Spline Sans Mono',monospace; font-weight:500; font-size:16px; color:var(--text);
+    outline:none;
+  }
+  .launchlist-widget input[type="email"]::placeholder{ color:#5f6672; }
+  .launchlist-widget button{
+    height:58px; padding:0 30px; background:var(--accent); border:none; border-radius:14px;
+    box-shadow:0 10px 34px rgba(255,212,0,.18);
+    font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:15px; letter-spacing:.3px;
+    color:var(--bg); cursor:pointer; white-space:nowrap; transition:background .12s ease;
+  }
+  .launchlist-widget button:hover{ background:var(--accent-hover); }
+
+  /* ---- hero phone mockup (placeholder for a real screenshot) ---- */
+  .hero-visual{ display:flex; justify-content:center; }
+  .phone{
+    width:300px; max-width:82vw; aspect-ratio:9/19.2;
+    background:var(--recess); border:1px solid rgba(255,255,255,.1); border-radius:38px;
+    padding:26px 20px; position:relative; display:flex; flex-direction:column;
+    box-shadow:0 40px 90px -40px #000;
+  }
+  .phone::before{
+    content:""; position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    width:36%; height:20px; border-radius:12px; background:#000;
+  }
+  .scr-top{ margin-top:26px; text-align:center; }
+  .scr-label{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:10.5px; letter-spacing:1.2px; color:var(--muted); }
+  .scr-mid{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
+  .scr-kicker{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:11px; letter-spacing:2px; color:var(--muted); }
+  .flaps{ display:flex; gap:5px; }
+  .flap{
+    font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:44px; line-height:1;
+    color:var(--bg); background:var(--accent); border-radius:6px; padding:10px 8px; min-width:.72em; text-align:center;
+    position:relative;
+  }
+  .flap::after{ content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(0,0,0,.28); }
+  .flap.sep{ background:transparent; color:var(--accent); padding-inline:0; min-width:.32em; }
+  .flap.sep::after{ display:none; }
+  .chip{
+    font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:10.5px; letter-spacing:.4px;
+    color:var(--accent); border:1px solid var(--accent); border-radius:20px; padding:6px 12px;
+  }
+  .scr-card{
+    background:var(--surface); border-radius:14px; padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between; margin-top:8px;
+  }
+  .scr-card .l{ display:flex; align-items:center; gap:10px; }
+  .lock{ font-size:18px; }
+  .scr-card .name{ font-family:'Hanken Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--text); }
+  .armed{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:10px; letter-spacing:1px; color:var(--accent); border:1px solid var(--accent); border-radius:6px; padding:4px 8px; }
+  .scr-streak{ text-align:center; margin-top:14px; }
+  .scr-streak .n{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:26px; color:var(--accent); line-height:1; }
+
+  /* ---- how it works ---- */
+  .section{ padding:0 var(--gut) clamp(72px,9vw,100px); }
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(28px,4vw,56px); margin-top:40px; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; gap:36px; } }
+  .step{ border-top:1px solid rgba(255,255,255,.1); padding-top:24px; }
+  .step .n{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:56px; color:rgba(255,255,255,.16); line-height:1; }
+  .step h3{ font-family:'Archivo',sans-serif; font-weight:800; font-size:clamp(22px,3vw,28px); letter-spacing:-.5px; margin:16px 0 10px; }
+  .step p{ font-weight:500; font-size:16.5px; line-height:1.6; color:var(--body); margin:0; text-wrap:pretty; }
+
+  /* ---- privacy ---- */
+  .privacy{ padding:clamp(80px,10vw,104px) var(--gut); text-align:center; }
+  .privacy p{
+    font-weight:600; font-size:clamp(22px,3.4vw,32px); line-height:1.4;
+    margin:24px auto 0; max-width:900px; text-wrap:balance;
+  }
+
+  /* ---- closing ---- */
+  .closing{ padding:0 var(--gut) clamp(80px,10vw,104px); }
+  .closing-card{
+    background:var(--recess); border:1px solid rgba(255,255,255,.06); border-radius:24px;
+    padding:clamp(48px,7vw,76px) clamp(28px,6vw,80px);
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+  }
+  .closing-card h2{
+    font-family:'Archivo',sans-serif; font-weight:800; font-size:clamp(32px,5.4vw,52px);
+    line-height:1.04; letter-spacing:-1.5px; margin:0;
+  }
+  .closing-card p{ font-weight:500; font-size:18px; color:var(--body); margin:20px 0 36px; max-width:520px; }
+  .closing-card .capture{ width:100%; max-width:560px; margin-top:0; }
+
+  /* ---- footer ---- */
+  footer{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    padding:28px var(--gut); border-top:1px solid var(--hair);
+  }
+  footer .brand{ font-size:18px; color:var(--muted); }
+  footer nav{ display:flex; gap:26px; font-weight:600; font-size:13px; }
+  footer nav a{ color:var(--muted); }
+  footer nav a:hover{ color:var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">Outset</div>
+    <div class="tag">Pre-launch · iOS</div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Departure enforcement</p>
+      <h1>Any app can tell you it's time to leave. Outset <span class="hl">does something about it.</span></h1>
+      <p class="lede">Outset shields your distracting apps as your leave-by time closes in — and the only thing that opens them again is you, physically crossing your own doorstep.</p>
+      <div class="capture">
+        <!-- LaunchList form renders here -->
+        <div class="launchlist-widget" data-key-id="dvJbbf"></div>
+        <p class="micro">One email when it ships. No account required.</p>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <!-- Placeholder app screen. Replace the whole .phone block with a real screenshot:
+           <img src="screenshot-armed.png" alt="Outset armed screen" class="phone" style="padding:0;object-fit:cover;"> -->
+      <div class="phone" role="img" aria-label="Outset home screen: leave in 6 minutes 12 seconds, 3 apps shielded and armed, 14-departure streak.">
+        <div class="scr-top">
+          <div class="scr-label">STANDUP · 9:15 AM</div>
+        </div>
+        <div class="scr-mid">
+          <div class="scr-kicker">LEAVE IN</div>
+          <div class="flaps" aria-hidden="true">
+            <span class="flap">0</span><span class="flap">6</span>
+            <span class="flap sep">:</span>
+            <span class="flap">1</span><span class="flap">2</span>
+          </div>
+          <div class="chip">ETA 23 min · traffic heavy</div>
+        </div>
+        <div class="scr-card">
+          <div class="l"><span class="lock">🔒</span><span class="name">3 apps shielded</span></div>
+          <span class="armed">ARMED</span>
+        </div>
+        <div class="scr-streak">
+          <div class="n">14</div>
+          <div class="scr-label" style="margin-top:4px;">ON-TIME STREAK</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <p class="eyebrow">How it works</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <h3>It reads your route</h3>
+        <p>Set where you're going. Outset uses Apple Maps traffic and works backward to the minute you need to walk out.</p>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <h3>It shields your apps</h3>
+        <p>As leave-by approaches, the apps you chose go dark. No timer to wait out. No QR tag to walk to. No code to tap.</p>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <h3>You leave. It opens.</h3>
+        <p>Crossing your geofence is the only unlock. Step past your doorstep and everything comes back on its own.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="privacy">
+    <p class="eyebrow">Privacy</p>
+    <p>No account. Outset runs no servers. Route and traffic come from Apple Maps; your history stays in your own iCloud, and we never see it.</p>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <div class="closing-card">
+      <h2>Be on time by default.</h2>
+      <p>Get the email the day Outset lands on the App Store.</p>
+      <div class="capture">
+        <div class="launchlist-widget" data-key-id="dvJbbf"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="brand">Outset</div>
+    <nav>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </footer>
+
+</div>
+</body>
+</html>
