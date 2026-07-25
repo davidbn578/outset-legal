@@ -104,45 +104,12 @@
   }
   .launchlist-widget button:hover{ background:var(--accent-hover); }
 
-  /* ---- hero phone mockup (placeholder for a real screenshot) ---- */
+  /* ---- hero image (real app screen) ---- */
   .hero-visual{ display:flex; justify-content:center; }
-  .phone{
-    width:300px; max-width:82vw; aspect-ratio:9/19.2;
-    background:var(--recess); border:1px solid rgba(255,255,255,.1); border-radius:38px;
-    padding:26px 20px; position:relative; display:flex; flex-direction:column;
-    box-shadow:0 40px 90px -40px #000;
+  .hero-phone{
+    width:320px; max-width:84vw; height:auto; display:block;
+    filter:drop-shadow(0 40px 90px rgba(0,0,0,.55));
   }
-  .phone::before{
-    content:""; position:absolute; top:14px; left:50%; transform:translateX(-50%);
-    width:36%; height:20px; border-radius:12px; background:#000;
-  }
-  .scr-top{ margin-top:26px; text-align:center; }
-  .scr-label{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:10.5px; letter-spacing:1.2px; color:var(--muted); }
-  .scr-mid{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
-  .scr-kicker{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:11px; letter-spacing:2px; color:var(--muted); }
-  .flaps{ display:flex; gap:5px; }
-  .flap{
-    font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:44px; line-height:1;
-    color:var(--bg); background:var(--accent); border-radius:6px; padding:10px 8px; min-width:.72em; text-align:center;
-    position:relative;
-  }
-  .flap::after{ content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(0,0,0,.28); }
-  .flap.sep{ background:transparent; color:var(--accent); padding-inline:0; min-width:.32em; }
-  .flap.sep::after{ display:none; }
-  .chip{
-    font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:10.5px; letter-spacing:.4px;
-    color:var(--accent); border:1px solid var(--accent); border-radius:20px; padding:6px 12px;
-  }
-  .scr-card{
-    background:var(--surface); border-radius:14px; padding:14px 16px;
-    display:flex; align-items:center; justify-content:space-between; margin-top:8px;
-  }
-  .scr-card .l{ display:flex; align-items:center; gap:10px; }
-  .lock{ font-size:18px; }
-  .scr-card .name{ font-family:'Hanken Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--text); }
-  .armed{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:10px; letter-spacing:1px; color:var(--accent); border:1px solid var(--accent); border-radius:6px; padding:4px 8px; }
-  .scr-streak{ text-align:center; margin-top:14px; }
-  .scr-streak .n{ font-family:'Spline Sans Mono',monospace; font-weight:700; font-size:26px; color:var(--accent); line-height:1; }
 
   /* ---- how it works ---- */
   .section{ padding:0 var(--gut) clamp(72px,9vw,100px); }
@@ -207,30 +174,7 @@
     </div>
 
     <div class="hero-visual">
-      <!-- Placeholder app screen. Replace the whole .phone block with a real screenshot:
-           <img src="screenshot-armed.png" alt="Outset armed screen" class="phone" style="padding:0;object-fit:cover;"> -->
-      <div class="phone" role="img" aria-label="Outset home screen: leave in 6 minutes 12 seconds, 3 apps shielded and armed, 14-departure streak.">
-        <div class="scr-top">
-          <div class="scr-label">STANDUP · 9:15 AM</div>
-        </div>
-        <div class="scr-mid">
-          <div class="scr-kicker">LEAVE IN</div>
-          <div class="flaps" aria-hidden="true">
-            <span class="flap">0</span><span class="flap">6</span>
-            <span class="flap sep">:</span>
-            <span class="flap">1</span><span class="flap">2</span>
-          </div>
-          <div class="chip">ETA 23 min · traffic heavy</div>
-        </div>
-        <div class="scr-card">
-          <div class="l"><span class="lock">🔒</span><span class="name">3 apps shielded</span></div>
-          <span class="armed">ARMED</span>
-        </div>
-        <div class="scr-streak">
-          <div class="n">14</div>
-          <div class="scr-label" style="margin-top:4px;">ON-TIME STREAK</div>
-        </div>
-      </div>
+      <img src="/hero.png" alt="Outset armed home screen — 9 minutes until leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
     </div>
   </section>
 
