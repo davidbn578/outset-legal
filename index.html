@@ -54,7 +54,13 @@
   .eyebrow{
     font-family:'Spline Sans Mono',monospace; font-weight:700;
     font-size:13px; letter-spacing:1px; color:var(--muted); margin:0;
+    display:inline-flex; align-items:center; gap:10px;
   }
+  .eyebrow::before{
+    content:""; width:22px; height:2px; background:var(--accent); border-radius:2px; flex:0 0 auto;
+  }
+  /* centered sections: center the eyebrow row */
+  .privacy .eyebrow{ justify-content:center; }
 
   /* ---- top bar ---- */
   .topbar{
@@ -259,6 +265,17 @@
   .reveal.in{ opacity:1; transform:none; }
   @media (prefers-reduced-motion: reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
 
+  /* ---- section banding (visual separation) ---- */
+  .recognize, .features, .privacy{ background:var(--surface); }
+  .section, .contrast, .faq, .closing{ background:var(--bg); }
+  /* hairline seam at the top of every major section */
+  .recognize, .section, .features, .contrast, .privacy, .faq, .closing{
+    border-top:1px solid rgba(255,255,255,.07);
+  }
+  /* cards on a surface-colored band need a touch more contrast to stay distinct */
+  .recognize .rec, .features .feat{ background:var(--recess); }
+  .privacy .pp{ background:var(--recess); }
+
   /* ---- footer ---- */
   footer{
     display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
@@ -288,7 +305,7 @@
 
     <div class="hero-visual">
       <div class="hero-phone-wrap">
-        <img src="/heronoeta.png" alt="Outset armed home screen — leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
+        <img src="/hero-noeta.png" alt="Outset armed home screen — leave-by for Fenway Studio, distractions locked, route on map, 12-day streak" class="hero-phone">
         <div class="flap-overlay" aria-hidden="true">
           <span class="fl" data-final="9">9</span>
           <span class="fl colon">:</span>
@@ -458,6 +475,7 @@
   </footer>
 
 </div>
+<canvas id="confetti-canvas" style="position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:9999; display:none;"></canvas>
 <script>
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -484,7 +502,68 @@
     }
   }
 
-  /* Scroll reveals: tag sections, fade+rise as they enter view. */
+  /* Confetti: full-screen burst on signup click. Skipped under reduced-motion. */
+  function fireConfetti(){
+    if(reduce) return;
+    var cv = document.getElementById('confetti-canvas');
+    var ctx = cv.getContext('2d');
+    var DPR = window.devicePixelRatio || 1;
+    cv.style.display = 'block';
+    cv.width = window.innerWidth * DPR;
+    cv.height = window.innerHeight * DPR;
+    ctx.scale(DPR, DPR);
+    var W = window.innerWidth, H = window.innerHeight;
+    var colors = ['#FFD400','#FFDE33','#E63946','#FFFFFF','#9DA3AF'];
+    var N = 160, parts = [];
+    for(var i=0;i<N;i++){
+      parts.push({
+        x: W/2 + (Math.random()-.5)*120,
+        y: H*0.42 + (Math.random()-.5)*40,
+        vx: (Math.random()-.5)*14,
+        vy: Math.random()*-16 - 6,
+        g: 0.32 + Math.random()*0.14,
+        w: 6+Math.random()*6, h: 8+Math.random()*8,
+        rot: Math.random()*Math.PI, vr:(Math.random()-.5)*0.4,
+        color: colors[(Math.random()*colors.length)|0],
+        life: 0
+      });
+    }
+    var start = performance.now();
+    function frame(t){
+      var elapsed = t - start;
+      ctx.clearRect(0,0,W,H);
+      var alive = false;
+      for(var i=0;i<parts.length;i++){
+        var p = parts[i];
+        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.rot += p.vr; p.life = elapsed;
+        var fade = elapsed>2200 ? Math.max(0, 1-(elapsed-2200)/900) : 1;
+        if(p.y < H+40 && fade>0){
+          alive = true;
+          ctx.save(); ctx.globalAlpha = fade;
+          ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+          ctx.restore();
+        }
+      }
+      if(alive && elapsed<3400){ requestAnimationFrame(frame); }
+      else { ctx.clearRect(0,0,W,H); cv.style.display='none'; }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* Hook: fire when a LaunchList submit button is clicked. The widget renders after load,
+     so we listen on document and match the button. Debounced so double-clicks fire once. */
+  var lastFire = 0;
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.launchlist-widget button, .launchlist-widget [type="submit"]');
+    if(!btn) return;
+    var now = Date.now();
+    if(now - lastFire < 1500) return;
+    lastFire = now;
+    fireConfetti();
+  });
+
   if(!reduce && 'IntersectionObserver' in window){
     var targets = document.querySelectorAll('.recognize, .section, .features, .contrast, .privacy, .faq, .closing-card');
     targets.forEach(function(el){ el.classList.add('reveal'); });
